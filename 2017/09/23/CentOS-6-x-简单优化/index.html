@@ -6,18 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://zpops.github.io">
-  <title>渣运维的成长之路</title>
+  <title>CentOS 6.x 简单优化 | 渣运维的成长之路</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="分享一些平时记录的笔记">
-<meta property="og:type" content="website">
-<meta property="og:title" content="渣运维的成长之路">
-<meta property="og:url" content="http://zpops.github.io/index.html">
+  <meta name="description" content="环境[root@localhost ~]# cat /etc/redhat-release CentOS release 6.9 (Final) [root@localhost ~]# uname -a Linux localhost.localdomain 2.6.32-696.el6.x86_64 #1 SMP Tue Mar 21 19:29:05 UTC 2017 x86_64 x86_6">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CentOS 6.x 简单优化">
+<meta property="og:url" content="http://zpops.github.io/2017/09/23/CentOS-6-x-简单优化/index.html">
 <meta property="og:site_name" content="渣运维的成长之路">
-<meta property="og:description" content="分享一些平时记录的笔记">
+<meta property="og:description" content="环境[root@localhost ~]# cat /etc/redhat-release CentOS release 6.9 (Final) [root@localhost ~]# uname -a Linux localhost.localdomain 2.6.32-696.el6.x86_64 #1 SMP Tue Mar 21 19:29:05 UTC 2017 x86_64 x86_6">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2017-09-22T16:46:42.374Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="渣运维的成长之路">
-<meta name="twitter:description" content="分享一些平时记录的笔记">
+<meta name="twitter:title" content="CentOS 6.x 简单优化">
+<meta name="twitter:description" content="环境[root@localhost ~]# cat /etc/redhat-release CentOS release 6.9 (Final) [root@localhost ~]# uname -a Linux localhost.localdomain 2.6.32-696.el6.x86_64 #1 SMP Tue Mar 21 19:29:05 UTC 2017 x86_64 x86_6">
   
     <link rel="alternative" href="/atom.xml" title="渣运维的成长之路" type="application/atom+xml">
   
@@ -153,16 +154,14 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-    <article id="post-CentOS-6-x-简单优化" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+            <article id="post-CentOS-6-x-简单优化" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/09/23/CentOS-6-x-简单优化/">CentOS 6.x 简单优化</a>
+    <h1 class="article-title" itemprop="name">
+      CentOS 6.x 简单优化
     </h1>
   
 
@@ -181,12 +180,183 @@ CentOS release 6.9 (Final)
 Linux localhost.localdomain 2.6.32-696.el6.x86_64 #1 SMP Tue Mar 21 19:29:05 UTC 2017 x86_64 x86_64 x86_64 GNU/Linux
 </code></pre><h2 id="清理登陆的时候显示的系统及内核版本"><a href="#清理登陆的时候显示的系统及内核版本" class="headerlink" title="清理登陆的时候显示的系统及内核版本"></a>清理登陆的时候显示的系统及内核版本</h2><h3 id="备份登陆信息"><a href="#备份登陆信息" class="headerlink" title="备份登陆信息"></a>备份登陆信息</h3><pre><code>cp /etc/issue{,.ori} 
 </code></pre><h3 id="清理登陆信息"><a href="#清理登陆信息" class="headerlink" title="清理登陆信息"></a>清理登陆信息</h3><pre><code>echo &gt;/etc/issue
+</code></pre><a id="more"></a>
+<h2 id="网卡配置"><a href="#网卡配置" class="headerlink" title="网卡配置"></a>网卡配置</h2><h3 id="eth0配置"><a href="#eth0配置" class="headerlink" title="eth0配置"></a>eth0配置</h3><pre><code>[root@localhost ~]# cat /etc/sysconfig/network-scripts/ifcfg-eth0
+DEVICE=eth0
+TYPE=Ethernet
+ONBOOT=yes
+NM_CONTROLLED=no
+BOOTPROTO=none
+IPADDR=10.0.0.100
+NETMASK=255.255.255.0
+DNS2=223.6.6.6
+GATEWAY=10.0.0.254
+DNS1=223.5.5.5
+USERCTL=no
+PEERDNS=yes
+IPV6INIT=no
+</code></pre><h3 id="eth1配置"><a href="#eth1配置" class="headerlink" title="eth1配置"></a>eth1配置</h3><pre><code>[root@localhost ~]# cat /etc/sysconfig/network-scripts/ifcfg-eth1
+DEVICE=eth1
+TYPE=Ethernet
+ONBOOT=yes
+NM_CONTROLLED=no
+BOOTPROTO=none
+IPADDR=172.16.1.100
+NETMASK=255.255.255.0
+USERCTL=no
+PEERDNS=yes
+IPV6INIT=no
+</code></pre><h2 id="目录-规划"><a href="#目录-规划" class="headerlink" title="目录 规划"></a>目录 规划</h2><pre><code>[root@localhost ~]# mkdir -p /server/{scripts,tools,backup}
+[root@localhost server]# ll -d /server/*
+drwxr-xr-x. 2 root root 4096 Sep  2 14:30 /server/backup  备份目录
+drwxr-xr-x. 2 root root 4096 Sep  2 14:30 /server/scripts 脚本目录
+drwxr-xr-x. 2 root root 4096 Sep  2 14:30 /server/tools   软件安装包目录
+</code></pre><h2 id="更改-yum-源"><a href="#更改-yum-源" class="headerlink" title="更改 yum 源"></a>更改 yum 源</h2><pre><code>mkdir -p /server/backup/yum/default &amp;&amp;\
+mv /etc/yum.repos.d/* /server/backup/yum/default/ &amp;&amp;\
+wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-6.repo &amp;&amp;\
+wget -O /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel-6.repo
+</code></pre><h2 id="关闭-iptables-防火墙"><a href="#关闭-iptables-防火墙" class="headerlink" title="关闭 iptables 防火墙"></a>关闭 iptables 防火墙</h2><pre><code>/etc/init.d/iptables stop
+/etc/init.d/iptables stop
+chkconfig iptables off
+</code></pre><h2 id="精简-开机自启动-服务"><a href="#精简-开机自启动-服务" class="headerlink" title="精简 开机自启动 服务"></a>精简 开机自启动 服务</h2><pre><code>chkconfig|egrep -v &quot;crond|sshd|network|rsyslog|sysstat&quot;|awk &apos;{print &quot;chkconfig&quot;,$1,&quot;off&quot;}&apos;|bash
+chkconfig --list|grep 3:on
+</code></pre><h2 id="提权-普通用户-可sudo"><a href="#提权-普通用户-可sudo" class="headerlink" title="提权 普通用户 可sudo"></a>提权 普通用户 可sudo</h2><pre><code>useradd oldboy
+echo 123456|passwd --stdin oldboy
+\cp /etc/sudoers /etc/sudoers.ori
+echo &quot;oldboy  ALL=(ALL) NOPASSWD: ALL &quot; &gt;&gt;/etc/sudoers
+tail -1 /etc/sudoers
+visudo -c    #检查语法
+</code></pre><h2 id="修改SSH端口号和屏蔽root账号远程登陆"><a href="#修改SSH端口号和屏蔽root账号远程登陆" class="headerlink" title="修改SSH端口号和屏蔽root账号远程登陆"></a>修改SSH端口号和屏蔽root账号远程登陆</h2><pre><code>#备份SSH配置 
+cp /etc/ssh/sshd_config{,.ori}
+#修改SSH安全配置 
+vi /etc/ssh/sshd_config
+#SSH链接默认端口
+port 52113
+#禁止root账号登陆
+PermitRootLogin no
+#禁止空密码
+PermitEmptyPasswords no
+#不使用DNS
+UseDNS no
+#不使用GSSAPI身份验证
+GSSAPIAuthentication no
+#sed命令一键执行
+sed -i &apos;13i Port 52113\npermitRootLogin no\nPermitEmptyPasswords no\nUseDNS no\nGSSAPIAuthentication no&apos; /etc/ssh/sshd_config
+</code></pre><h2 id="中文字符集"><a href="#中文字符集" class="headerlink" title="中文字符集"></a>中文字符集</h2><pre><code>cp /etc/sysconfig/i18n{,.ori}
+echo &apos;LANG=&quot;zh_CN.UTF-8&quot;&apos;  &gt;/etc/sysconfig/i18n 
+source /etc/sysconfig/i18n
+echo $LANG
+</code></pre><h2 id="英文字符集"><a href="#英文字符集" class="headerlink" title="英文字符集"></a>英文字符集</h2><pre><code>cp /etc/sysconfig/i18n{,.ori}
+echo &apos;LANG=&quot;en_US.UTF-8&quot;&apos;  &gt;/etc/sysconfig/i18n 
+source /etc/sysconfig/i18n
+echo $LANG
+</code></pre><h2 id="时间同步"><a href="#时间同步" class="headerlink" title="时间同步"></a>时间同步</h2><pre><code>echo &apos;#time sync by oldboy at 2010-2-1&apos; &gt;&gt;/var/spool/cron/root
+echo &apos;*/5 * * * * /usr/sbin/ntpdate time.nist.gov &gt;/dev/null 2&gt;&amp;1&apos; &gt;&gt;/var/spool/cron/root
+crontab -l
+</code></pre><h2 id="命令行安全"><a href="#命令行安全" class="headerlink" title="命令行安全"></a>命令行安全</h2><pre><code>echo &apos;export TMOUT=300&apos; &gt;&gt;/etc/profile  ### 设置超时时间300S ###
+echo &apos;export HISTSIZE=5&apos; &gt;&gt;/etc/profile ### 定义历史记录数5条 ###
+echo &apos;export HISTFILESIZE=5&apos; &gt;&gt;/etc/profile ### 定义历史记录文件数5条 ###
+tail -3 /etc/profile ### 检查是否追加成功 ###
+. /etc/profile ### 使上面配置生效 ###
+</code></pre><h2 id="调整linux系统文件描述符数量"><a href="#调整linux系统文件描述符数量" class="headerlink" title="调整linux系统文件描述符数量"></a>调整linux系统文件描述符数量</h2><pre><code>#文件描述符是由无符号整数表示的句柄，进程使用它来标示打开文件
+echo &apos;*   -   nofile  65535 &apos; &gt;&gt;/etc/security/limits.conf 
+tail -1 /etc/security/limits.conf 
+</code></pre><h2 id="内核优化"><a href="#内核优化" class="headerlink" title="内核优化"></a>内核优化</h2><pre><code>cat &gt;&gt;/etc/sysctl.conf&lt;&lt;EOF
+net.ipv4.tcp_fin_timeout = 2
+net.ipv4.tcp_tw_reuse = 1
+net.ipv4.tcp_tw_recycle = 1
+net.ipv4.tcp_syncookies = 1
+net.ipv4.tcp_keepalive_time = 600
+net.ipv4.ip_local_port_range = 400065000
+net.ipv4.tcp_max_syn_backlog = 16384
+net.ipv4.tcp_max_tw_buckets = 36000
+net.ipv4.route.gc_timeout = 100
+net.ipv4.tcp_syn_retries = 1
+net.ipv4.tcp_synack_retries = 1
+net.core.somaxconn = 16384
+net.core.netdev_max_backlog = 16384
+net.ipv4.tcp_max_orphans = 16384
+#以下参数是对iptables防火墙的优化，防火墙不开会提示，可以忽略不理。
+net.nf_conntrack_max = 25000000
+net.netfilter.nf_conntrack_max = 25000000
+net.netfilter.nf_conntrack_tcp_timeout_established = 180
+net.netfilter.nf_conntrack_tcp_timeout_time_wait = 120
+net.netfilter.nf_conntrack_tcp_timeout_close_wait = 60
+net.netfilter.nf_conntrack_tcp_timeout_fin_wait = 120
+EOF
+sysctl -p #使上面的配置生效
+</code></pre><h2 id="centos6-X可能会报错"><a href="#centos6-X可能会报错" class="headerlink" title="centos6.X可能会报错"></a>centos6.X可能会报错</h2><pre><code>这个错误可能是你的防火墙没有开启或者自动处理可载入的模块ip_conntrack没有自动载入
+解决办法:
+一是开启防火墙
+二是自动处理开载入的模块ip_conntrack
+
+error: &quot;net.nf_conntrack_max&quot;isan unknown key
+error: &quot;net.netfilter.nf_conntrack_max&quot;isan unknown key
+error: &quot;net.netfilter.nf_conntrack_tcp_timeout_established&quot;isan unknown key
+error: &quot;net.netfilter.nf_conntrack_tcp_timeout_time_wait&quot;isan unknown key
+error: &quot;net.netfilter.nf_conntrack_tcp_timeout_close_wait&quot;isan unknown key
+error: &quot;net.netfilter.nf_conntrack_tcp_timeout_fin_wait&quot;isan unknown key
+</code></pre><h2 id="centos6-X解决方法："><a href="#centos6-X解决方法：" class="headerlink" title="centos6.X解决方法："></a>centos6.X解决方法：</h2><pre><code>modprobe nf_conntrack
+echo &quot;modprobe nf_conntrack&quot;&gt;/etc/rc.local
+注意：如果不开启ip6tables去优化nf_conntrack模块去执行上面的解决方法会依旧提示上面的error。
+所以在优化服务的时候，可以选择留下iptables和ip6tables。
+当然如果不用iptables的话，在内核优化的时候就要去掉对nf_conntrack的设置，在进行/sbin/sysctl -p 是不会有错误提示的
+</code></pre><h2 id="下载安装系统基础软件"><a href="#下载安装系统基础软件" class="headerlink" title="下载安装系统基础软件"></a>下载安装系统基础软件</h2><pre><code>yum install lrzsz nmap tree dos2unix nc -y
+</code></pre><h2 id="系统升级操作（暂时不用操作升级）"><a href="#系统升级操作（暂时不用操作升级）" class="headerlink" title="系统升级操作（暂时不用操作升级）"></a>系统升级操作（暂时不用操作升级）</h2><pre><code>yum update或yum upgrade
+yum -y update  #升级所有包，改变软件设置和系统设置,系统版本内核都升级
+yum -y upgrade #升级所有包，不改变软件设置和系统设置，系统版本升级，内核不改变
+</code></pre><h2 id="调整克隆后网站正常配置-（仅针对克隆虚拟机使用）"><a href="#调整克隆后网站正常配置-（仅针对克隆虚拟机使用）" class="headerlink" title="调整克隆后网站正常配置 （仅针对克隆虚拟机使用）"></a>调整克隆后网站正常配置 （仅针对克隆虚拟机使用）</h2><pre><code>echo &apos;&gt;/etc/udev/rules.d/70-persistent-net.rules&apos; &gt;&gt;/etc/rc.local 
+#注意！ 需要删除模板及网卡配置里mac所在行及uuid所在行
+</code></pre><hr>
+<h2 id="一键修改ip地址主机名脚本"><a href="#一键修改ip地址主机名脚本" class="headerlink" title="一键修改ip地址主机名脚本"></a>一键修改ip地址主机名脚本</h2><pre><code>cat &gt;/server/scripts/m.sh&lt;&lt;`EOF`
+#!/bin/sh
+if [ $# -ne 2 ];then
+  echo &quot;/bin/sh $0 hostname PartIP&quot;
+  exit 1
+fi
+sed  -i &quot;s#localhost.localdomain#$1#g&quot; /etc/sysconfig/network  # 注意localhost.localdomain替换成你模板的主机名 #
+hostname $1
+sed -i &quot;s#100#$2#g&quot; /etc/sysconfig/network-scripts/ifcfg-eth0  # 注意100替换成你模板机eth0网卡ip地址最后一位 #
+sed -i &quot;s#100#$2#g&quot; /etc/sysconfig/network-scripts/ifcfg-eth1  # 注意100替换成你模板机eth1网卡ip地址最后一位 #
+ifdown eth0 &amp;&amp; ifup eth0
+ifdown eth1 &amp;&amp; ifup eth1
+service network restart
+bash
+`EOF`
+#注!执行脚本后需要重新连接控制台因为IP发生了变化
+</code></pre><hr>
+<h2 id="host文件解析设置-环境不一样无视本项"><a href="#host文件解析设置-环境不一样无视本项" class="headerlink" title="host文件解析设置(环境不一样无视本项)"></a>host文件解析设置(环境不一样无视本项)</h2><pre><code>cp -p /etc/hosts /server/backup/  #备份hosts文件
+</code></pre><p>#<br>    cat &gt;/etc/hosts&lt;&lt;<code>EOF</code><br>        127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4<br>        ::1 localhost localhost.localdomain localhost6 localhost6.localdomain6<br>        172.16.1.5  lb01<br>        172.16.1.6  lb02<br>        172.16.1.7  web02<br>        172.16.1.8  web01<br>        172.16.1.51 db01 db01.etiantian.org<br>        172.16.1.31 nfs01<br>        172.16.1.41 backup<br>        172.16.1.61 m01<br>    <code>EOF</code></p>
+<h2 id="设置shell颜色"><a href="#设置shell颜色" class="headerlink" title="设置shell颜色"></a>设置shell颜色</h2><pre><code>cat &gt;&gt;/etc/profile&lt;&lt;`EOF`
+PS1=&apos;\[\e[36;1m\][\u@\h \W]\$\[\e[0m\]&apos;
+`EOF`
+source /etc/profile
+</code></pre><h4 id="自动补全。这里说的补全，不只是系统默认的补全路径跟文件名的补全功能，而是命令的参数的补全，有了这个补全之后，在Bash里面几乎能补全任何可以补全的补全。"><a href="#自动补全。这里说的补全，不只是系统默认的补全路径跟文件名的补全功能，而是命令的参数的补全，有了这个补全之后，在Bash里面几乎能补全任何可以补全的补全。" class="headerlink" title="自动补全。这里说的补全，不只是系统默认的补全路径跟文件名的补全功能，而是命令的参数的补全，有了这个补全之后，在Bash里面几乎能补全任何可以补全的补全。"></a>自动补全。这里说的补全，不只是系统默认的补全路径跟文件名的补全功能，而是命令的参数的补全，有了这个补全之后，在Bash里面几乎能补全任何可以补全的补全。</h4><pre><code>yum -y install bash-completion
+注!装完重新连下控制台才生效
 </code></pre>
-        
-          <a class="article-more-a" href="/2017/09/23/CentOS-6-x-简单优化/#more">more >></a>
-        
       
 
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
       
     </div>
     <div class="article-info article-info-index">
@@ -195,16 +365,75 @@ Linux localhost.localdomain 2.6.32-696.el6.x86_64 #1 SMP Tue Mar 21 19:29:05 UTC
       
 
       
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/09/23/CentOS-6-x-简单优化/">展开全文 >></a>
-        </p>
-      
 
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://zpops.github.io/2017/09/23/CentOS-6-x-简单优化/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
       
       <div class="clearfix"></div>
     </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+  
+    <a href="/2017/09/22/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Hello World</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
 
 <aside class="wrap-side-operation">
     <div class="mod-side-operation">
@@ -224,79 +453,14 @@ Linux localhost.localdomain 2.6.32-696.el6.x86_64 #1 SMP Tue Mar 21 19:29:05 UTC
 
 
 
-
   
-    <article id="post-hello-world" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/09/22/hello-world/">Hello World</a>
-    </h1>
   
 
-        
-        <a href="/2017/09/22/hello-world/" class="archive-article-date">
-  	<time datetime="2017-09-22T09:25:29.468Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-22</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/09/22/hello-world/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
+  
 
   
+
   
 
 
@@ -319,8 +483,8 @@ Linux localhost.localdomain 2.6.32-696.el6.x86_64 #1 SMP Tue Mar 21 19:29:05 UTC
     <script>
 	var yiliaConfig = {
 		mathjax: false,
-		isHome: true,
-		isPost: false,
+		isHome: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,
