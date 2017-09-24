@@ -6,18 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://zpops.github.io">
-  <title>Archives | 渣运维的成长之路</title>
+  <title>Centos 7.x部署 xrdp | 渣运维的成长之路</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="分享一些平时记录的笔记">
-<meta property="og:type" content="website">
-<meta property="og:title" content="渣运维的成长之路">
-<meta property="og:url" content="http://zpops.github.io/archives/index.html">
+  <meta name="description" content="xrdp 官网 1. 什么是xrdp xrdp是一个开放源码的远程桌面协议（rdp）服务器,可以通过windows自带的远程桌面软件(mstsc)通过默认3389端口去远程控制管理linux系统(centos/redhat/ubuntu)等.  2. xrdp 安装方法2.1 通过yum方式安装基础软件包12yum install -y tigervnc tigervnc-serveryum in">
+<meta name="keywords" content="Linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Centos 7.x部署 xrdp">
+<meta property="og:url" content="http://zpops.github.io/2017/09/25/Centos-7-x部署-xrdp/index.html">
 <meta property="og:site_name" content="渣运维的成长之路">
-<meta property="og:description" content="分享一些平时记录的笔记">
+<meta property="og:description" content="xrdp 官网 1. 什么是xrdp xrdp是一个开放源码的远程桌面协议（rdp）服务器,可以通过windows自带的远程桌面软件(mstsc)通过默认3389端口去远程控制管理linux系统(centos/redhat/ubuntu)等.  2. xrdp 安装方法2.1 通过yum方式安装基础软件包12yum install -y tigervnc tigervnc-serveryum in">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2017-09-24T17:24:25.354Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="渣运维的成长之路">
-<meta name="twitter:description" content="分享一些平时记录的笔记">
+<meta name="twitter:title" content="Centos 7.x部署 xrdp">
+<meta name="twitter:description" content="xrdp 官网 1. 什么是xrdp xrdp是一个开放源码的远程桌面协议（rdp）服务器,可以通过windows自带的远程桌面软件(mstsc)通过默认3389端口去远程控制管理linux系统(centos/redhat/ubuntu)等.  2. xrdp 安装方法2.1 通过yum方式安装基础软件包12yum install -y tigervnc tigervnc-serveryum in">
   
     <link rel="alternative" href="/atom.xml" title="渣运维的成长之路" type="application/atom+xml">
   
@@ -135,36 +137,45 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
+            <article id="post-Centos-7-x部署-xrdp" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
   
+    <h1 class="article-title" itemprop="name">
+      Centos 7.x部署 xrdp
+    </h1>
   
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2017" class="archive-year">2017</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/09/25/Centos-7-x部署-xrdp/" class="archive-article-date">
+
+        
+        <a href="/2017/09/25/Centos-7-x部署-xrdp/" class="archive-article-date">
   	<time datetime="2017-09-24T17:20:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-25</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/09/25/Centos-7-x部署-xrdp/">Centos 7.x部署 xrdp</a>
-    </h1>
-  
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a href="http://www.xrdp.org/" target="_blank" rel="external">xrdp 官网</a></p>
+<h2 id="1-什么是xrdp"><a href="#1-什么是xrdp" class="headerlink" title="1. 什么是xrdp"></a>1. 什么是xrdp</h2><blockquote>
+<p>xrdp是一个开放源码的远程桌面协议（rdp）服务器,可以通过windows自带的远程桌面软件(mstsc)通过默认3389端口去远程控制管理linux系统(centos/redhat/ubuntu)等.</p>
+</blockquote>
+<h2 id="2-xrdp-安装方法"><a href="#2-xrdp-安装方法" class="headerlink" title="2. xrdp 安装方法"></a>2. xrdp 安装方法</h2><h5 id="2-1-通过yum方式安装基础软件包"><a href="#2-1-通过yum方式安装基础软件包" class="headerlink" title="2.1 通过yum方式安装基础软件包"></a>2.1 通过yum方式安装基础软件包</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">yum install -y tigervnc tigervnc-server</div><div class="line">yum install -y xrdp</div></pre></td></tr></table></figure>
+<h5 id="2-2-yum-xrdp时-可能会出现在阿里云的epel源没有xrdp包"><a href="#2-2-yum-xrdp时-可能会出现在阿里云的epel源没有xrdp包" class="headerlink" title="2.2 yum xrdp时,可能会出现在阿里云的epel源没有xrdp包"></a>2.2 yum xrdp时,可能会出现在阿里云的epel源没有xrdp包</h5><h5 id="2-3-手动下载"><a href="#2-3-手动下载" class="headerlink" title="2.3 手动下载"></a>2.3 手动下载</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">wget http://dl.fedoraproject.org/pub/epel/7/x86_64/x/xrdp-0.9.3-1.el7.x86_64.rpm</div><div class="line">yum localinstall -y xrdp-0.9.3-1.el7.x86_64.rpm</div></pre></td></tr></table></figure>
+<h2 id="3-xrdp-修改配置文件"><a href="#3-xrdp-修改配置文件" class="headerlink" title="3. xrdp 修改配置文件"></a>3. xrdp 修改配置文件</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#修改xrdp的配置文件通过sed命令直接替换</span></div><div class="line">sed -i <span class="string">'s#max_bpp=32#max_bpp=24#g'</span> /etc/xrdp/xrdp.ini</div></pre></td></tr></table></figure>
+<h2 id="4-启动xrdp服务"><a href="#4-启动xrdp服务" class="headerlink" title="4. 启动xrdp服务"></a>4. 启动xrdp服务</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#启动服务设置服务自启动</span></div><div class="line">systemctl start xrdp</div><div class="line">systemctl <span class="built_in">enable</span> xrdp</div><div class="line"><span class="comment">#检查一下xrdp服务启动没</span></div><div class="line">systemctl status xrdp.service</div></pre></td></tr></table></figure>
+<h2 id="5-检查xrdp端口"><a href="#5-检查xrdp端口" class="headerlink" title="5. 检查xrdp端口"></a>5. 检查xrdp端口</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#查看一下 xrdp用的什么端口</span></div><div class="line">netstat -antup|grep xrdp</div><div class="line">tcp        0      0 127.0.0.1:3350          0.0.0.0:*               LISTEN      19747/xrdp-sesman   </div><div class="line">tcp        0      0 0.0.0.0:3389            0.0.0.0:*               LISTEN      19749/xrdp</div></pre></td></tr></table></figure>
+<hr>
+<h2 id="6-防火墙开启的情况下需要做放行"><a href="#6-防火墙开启的情况下需要做放行" class="headerlink" title="6. 防火墙开启的情况下需要做放行"></a>6. 防火墙开启的情况下需要做放行</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#首先让启动防火墙启用</span></div><div class="line">systemctl start firewalld</div><div class="line"><span class="comment">#默认情况下，防火墙在系统重启后不会自动启动。发出以下命令以在系统启动时启用防火墙</span></div><div class="line">systemctl <span class="built_in">enable</span> firewalld</div><div class="line"><span class="comment">#接下来是创建iptables规则以允许从外部机器rdp连接，以下命令将添加rdp端口（3389）的异常。</span></div><div class="line">firewall-cmd --permanent --zone = public --add-port = 3389 / tcp</div><div class="line">firewall-cmd --reload</div></pre></td></tr></table></figure>
+<h2 id="7-SELINUX配置"><a href="#7-SELINUX配置" class="headerlink" title="7. SELINUX配置"></a>7. SELINUX配置</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">##SELINUX开启的情况下需要做放行</span></div><div class="line">配置SELinux</div><div class="line">chcon --<span class="built_in">type</span> = bin_t / usr / sbin / xrdp</div><div class="line">chcon --<span class="built_in">type</span> = bin_t / usr / sbin / xrdp-sesman</div></pre></td></tr></table></figure>
+      
 
-        <div class="article-info info-on-right">
-          
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
@@ -176,88 +187,106 @@
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://zpops.github.io/2017/09/25/Centos-7-x部署-xrdp/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/09/24/hello-world/" class="archive-article-date">
-  	<time datetime="2017-09-24T07:40:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-24</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2017/09/24/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Hello World</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/09/24/hello-world/">Hello World</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/09/23/CentOS-6-x-简单优化/" class="archive-article-date">
-  	<time datetime="2017-09-22T16:28:23.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-23</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/09/23/CentOS-6-x-简单优化/">CentOS 6.x 简单优化</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Linux</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">基础优化</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
   
 
-    
+  
 
 
           </div>
@@ -280,8 +309,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
