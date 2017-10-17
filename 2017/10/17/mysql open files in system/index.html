@@ -6,18 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://zpops.github.io">
-  <title>Archives | 渣运维的成长之路</title>
+  <title>MySQL open files in system | 渣运维的成长之路</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="分享一些平时记录的笔记">
-<meta property="og:type" content="website">
-<meta property="og:title" content="渣运维的成长之路">
-<meta property="og:url" content="http://zpops.github.io/archives/index.html">
+  <meta name="description" content="#Can’t create/write to file ‘/tmp/ibbFJPTQ’ (Errcode: 23 - Too many open files in system)解决办法 ##环境:[root@xxxxxx /]# cat /etc/redhat-releaseRed Hat Enterprise Linux Server release 6.3 (Santiago) ##数据库版">
+<meta name="keywords" content="Linux,MySQL故障">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL open files in system">
+<meta property="og:url" content="http://zpops.github.io/2017/10/17/mysql open files in system/index.html">
 <meta property="og:site_name" content="渣运维的成长之路">
-<meta property="og:description" content="分享一些平时记录的笔记">
+<meta property="og:description" content="#Can’t create/write to file ‘/tmp/ibbFJPTQ’ (Errcode: 23 - Too many open files in system)解决办法 ##环境:[root@xxxxxx /]# cat /etc/redhat-releaseRed Hat Enterprise Linux Server release 6.3 (Santiago) ##数据库版">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2017-10-17T08:44:45.726Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="渣运维的成长之路">
-<meta name="twitter:description" content="分享一些平时记录的笔记">
+<meta name="twitter:title" content="MySQL open files in system">
+<meta name="twitter:description" content="#Can’t create/write to file ‘/tmp/ibbFJPTQ’ (Errcode: 23 - Too many open files in system)解决办法 ##环境:[root@xxxxxx /]# cat /etc/redhat-releaseRed Hat Enterprise Linux Server release 6.3 (Santiago) ##数据库版">
   
     <link rel="alternative" href="/atom.xml" title="渣运维的成长之路" type="application/atom+xml">
   
@@ -135,36 +137,70 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-mysql open files in system" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2017" class="archive-year">2017</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/10/17/mysql open files in system/" class="archive-article-date">
-  	<time datetime="2017-10-17T08:44:23.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-17</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/10/17/mysql open files in system/">MySQL open files in system</a>
+    <h1 class="article-title" itemprop="name">
+      MySQL open files in system
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2017/10/17/mysql open files in system/" class="archive-article-date">
+  	<time datetime="2017-10-17T08:44:23.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-17</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>#Can’t create/write to file ‘/tmp/ibbFJPTQ’ (Errcode: 23 - Too many open files in system)解决办法</p>
+<p>##环境:<br>[root@xxxxxx /]# cat /etc/redhat-release<br>Red Hat Enterprise Linux Server release 6.3 (Santiago)</p>
+<p>##数据库版本:<br>mysql 5.6.36</p>
+<p>###一天朋友 跟我说他们测试服务器的mysql无法启动,后经过ssh登录上去 测试发现确实无法启动,经确认数据库无数据后 重新初始化数据库 已就报错如下</p>
+<p>###尝试更换 mysql 5.6.36 版本 二进制安装 源码cmake安装 rpm安装 故障依旧<br><code>/application/mysql/bin/mysqld: Can&#39;t create/write to file &#39;/tmp/ibbFJPTQ&#39; (Errcode: 23 - Too many open files in system)
+2017-10-17 14:34:26 7f6a65873720  InnoDB: Error: unable to create temporary file; errno: 23
+2017-10-17 14:34:26 21461 [ERROR] Plugin &#39;InnoDB&#39; init function returned error.
+2017-10-17 14:34:26 21461 [ERROR] Plugin &#39;InnoDB&#39; registration as a STORAGE ENGINE failed.
+2017-10-17 14:34:26 21461 [ERROR] Unknown/unsupported storage engine: InnoDB
+2017-10-17 14:34:26 21461 [ERROR] Aborting</code></p>
+<p>###最后故障定位确认为 (Errcode: 23 - Too many open files in system) 打开文件太多了</p>
+<p>###排查过程:<br>[root@xxxx ~]# free -m<br>             total       used       free     shared    buffers     cached<br>Mem:          3815       2408       1407          0          4         86<br>-/+ buffers/cache:       2317       1497<br>Swap:          746        746          0</p>
+<p>#检查系统打开了多少文件 12w<br>[root@xxxx ~]# lsof |wc -l<br>121997</p>
+<p>#通过命令查看同一时间打开文件的个数<br>ulimit -n<br>[root@xxxx /]# ulimit -n<br>1024</p>
+<p>1024个..不正常</p>
+<p>#接下来打算先释放swap内存看看</p>
+<p>#写把内存数据写入硬盘<br>sync</p>
+<p>#之后执行swapoff -a参数关闭交换分区 后再打开交换分区swapon -a<br>swapoff -a 卡半天没反应 后来 ctrl +c 断开了 </p>
+<p>#经过和朋友确认 可以reboot重启</p>
+<p>reboot 重启后</p>
+<p>#执行数据库初始化正确通过没有报错<br>/application/mysql/scripts/mysql_install_db –basedir=/application/mysql-5.6.36/ –datadir=/application/mysql-5.6.36/data –user=mysql</p>
+<p>###mysql部署#####<br>mkdir /server/tools -p<br>cd /server/tools/<br>tar xf mysql-5.6.36-linux-glibc2.5-x86_64.tar.gz</p>
+<p>###创建启动服务用户<br>useradd -u 520 -s /sbin/nologin -M mysql</p>
+<p>###创建安装软件目录<br>mkdir  /application -p</p>
+<p>###把MySQL软件目录移动到/application下简化目录名称版本号<br>cp -rp /server/tools/mysql-5.6.36-linux-glibc2.5-x86_64 /application/mysql-5.6.36</p>
+<p>###创建目录软连接<br>ln -s /application/mysql-5.6.36/ /application/mysql</p>
+<p>###更改mysql下存放数据库的属主属组<br>chown -R mysql.mysql /application/mysql/data/</p>
+<p>###初始化数据库 成功会看到两个OK<br>/application/mysql/scripts/mysql_install_db –basedir=/application/mysql-5.6.36/ –datadir=/application/mysql-5.6.36/data –user=mysql</p>
+<p>###复制mysql启动脚本<br>\cp /application/mysql-5.6.36/support-files/mysql.server  /etc/init.d/mysqld</p>
+<p>###给予mysqld启动脚本执行权限<br>chmod +x /etc/init.d/mysqld </p>
+<p>###因为mysql安装路径与默认路径有变化,因此需要更改配置文件mysql路径<br>sed -i ‘s#/usr/local/mysql#/application/mysql-5.6.36#g’ /application/mysql-5.6.36/bin/mysqld_safe /etc/init.d/mysqld</p>
+<p>###覆盖my.cnf的配置文件<br>\cp /application/mysql-5.6.36/support-files/my-default.cnf /etc/my.cnf </p>
+<p>###启动服务测试<br>/etc/init.d/mysqld start</p>
+<p>###将mysql服务加入chkconfig管理列表<br>chkconfig –add /etc/init.d/mysqld</p>
+<p>###设置终端模式开机启动<br>chkconfig mysqld on</p>
+<p>###设置mysql环境变量<br>echo ‘PATH=/application/mysql/bin/:$PATH’ &gt;&gt;/etc/profile<br>source /etc/profile</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
@@ -180,126 +216,106 @@
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://zpops.github.io/2017/10/17/mysql open files in system/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/09/25/Centos-7-x部署-xrdp/" class="archive-article-date">
-  	<time datetime="2017-09-24T17:20:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-25</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2017/09/25/Centos-7-x部署-xrdp/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Centos 7.x部署 xrdp</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/09/25/Centos-7-x部署-xrdp/">Centos 7.x部署 xrdp</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Linux</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/09/24/hello-world/" class="archive-article-date">
-  	<time datetime="2017-09-24T07:40:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-24</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/09/24/hello-world/">Hello World</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/09/23/CentOS-6-x-简单优化/" class="archive-article-date">
-  	<time datetime="2017-09-22T16:28:23.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-23</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/09/23/CentOS-6-x-简单优化/">CentOS 6.x 简单优化</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Linux</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">基础优化</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
-  
-    </div></section>
-  
-
-    
 
 
           </div>
@@ -322,8 +338,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,

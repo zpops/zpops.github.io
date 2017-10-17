@@ -137,6 +137,119 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-mysql open files in system" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/10/17/mysql open files in system/">MySQL open files in system</a>
+    </h1>
+  
+
+        
+        <a href="/2017/10/17/mysql open files in system/" class="archive-article-date">
+  	<time datetime="2017-10-17T08:44:23.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-17</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>#Can’t create/write to file ‘/tmp/ibbFJPTQ’ (Errcode: 23 - Too many open files in system)解决办法</p>
+<p>##环境:<br>[root@xxxxxx /]# cat /etc/redhat-release<br>Red Hat Enterprise Linux Server release 6.3 (Santiago)</p>
+<p>##数据库版本:<br>mysql 5.6.36</p>
+<p>###一天朋友 跟我说他们测试服务器的mysql无法启动,后经过ssh登录上去 测试发现确实无法启动,经确认数据库无数据后 重新初始化数据库 已就报错如下</p>
+<p>###尝试更换 mysql 5.6.36 版本 二进制安装 源码cmake安装 rpm安装 故障依旧<br><code>/application/mysql/bin/mysqld: Can&#39;t create/write to file &#39;/tmp/ibbFJPTQ&#39; (Errcode: 23 - Too many open files in system)
+2017-10-17 14:34:26 7f6a65873720  InnoDB: Error: unable to create temporary file; errno: 23
+2017-10-17 14:34:26 21461 [ERROR] Plugin &#39;InnoDB&#39; init function returned error.
+2017-10-17 14:34:26 21461 [ERROR] Plugin &#39;InnoDB&#39; registration as a STORAGE ENGINE failed.
+2017-10-17 14:34:26 21461 [ERROR] Unknown/unsupported storage engine: InnoDB
+2017-10-17 14:34:26 21461 [ERROR] Aborting</code></p>
+<p>###最后故障定位确认为 (Errcode: 23 - Too many open files in system) 打开文件太多了</p>
+<p>###排查过程:<br>[root@xxxx ~]# free -m<br>             total       used       free     shared    buffers     cached<br>Mem:          3815       2408       1407          0          4         86<br>-/+ buffers/cache:       2317       1497<br>Swap:          746        746          0</p>
+<p>#检查系统打开了多少文件 12w<br>[root@xxxx ~]# lsof |wc -l<br>121997</p>
+<p>#通过命令查看同一时间打开文件的个数<br>ulimit -n<br>[root@xxxx /]# ulimit -n<br>1024</p>
+<p>1024个..不正常</p>
+<p>#接下来打算先释放swap内存看看</p>
+<p>#写把内存数据写入硬盘<br>sync</p>
+<p>#之后执行swapoff -a参数关闭交换分区 后再打开交换分区swapon -a<br>swapoff -a 卡半天没反应 后来 ctrl +c 断开了 </p>
+<p>#经过和朋友确认 可以reboot重启</p>
+<p>reboot 重启后</p>
+<p>#执行数据库初始化正确通过没有报错<br>/application/mysql/scripts/mysql_install_db –basedir=/application/mysql-5.6.36/ –datadir=/application/mysql-5.6.36/data –user=mysql</p>
+<p>###mysql部署#####<br>mkdir /server/tools -p<br>cd /server/tools/<br>tar xf mysql-5.6.36-linux-glibc2.5-x86_64.tar.gz</p>
+<p>###创建启动服务用户<br>useradd -u 520 -s /sbin/nologin -M mysql</p>
+<p>###创建安装软件目录<br>mkdir  /application -p</p>
+<p>###把MySQL软件目录移动到/application下简化目录名称版本号<br>cp -rp /server/tools/mysql-5.6.36-linux-glibc2.5-x86_64 /application/mysql-5.6.36</p>
+<p>###创建目录软连接<br>ln -s /application/mysql-5.6.36/ /application/mysql</p>
+<p>###更改mysql下存放数据库的属主属组<br>chown -R mysql.mysql /application/mysql/data/</p>
+<p>###初始化数据库 成功会看到两个OK<br>/application/mysql/scripts/mysql_install_db –basedir=/application/mysql-5.6.36/ –datadir=/application/mysql-5.6.36/data –user=mysql</p>
+<p>###复制mysql启动脚本<br>\cp /application/mysql-5.6.36/support-files/mysql.server  /etc/init.d/mysqld</p>
+<p>###给予mysqld启动脚本执行权限<br>chmod +x /etc/init.d/mysqld </p>
+<p>###因为mysql安装路径与默认路径有变化,因此需要更改配置文件mysql路径<br>sed -i ‘s#/usr/local/mysql#/application/mysql-5.6.36#g’ /application/mysql-5.6.36/bin/mysqld_safe /etc/init.d/mysqld</p>
+<p>###覆盖my.cnf的配置文件<br>\cp /application/mysql-5.6.36/support-files/my-default.cnf /etc/my.cnf </p>
+<p>###启动服务测试<br>/etc/init.d/mysqld start</p>
+<p>###将mysql服务加入chkconfig管理列表<br>chkconfig –add /etc/init.d/mysqld</p>
+<p>###设置终端模式开机启动<br>chkconfig mysqld on</p>
+<p>###设置mysql环境变量<br>echo ‘PATH=/application/mysql/bin/:$PATH’ &gt;&gt;/etc/profile<br>source /etc/profile</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Linux</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">MySQL故障</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/10/17/mysql open files in system/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Centos-7-x部署-xrdp" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -476,6 +589,10 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">基础优化</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">MySQL故障</a>
               </li>
             
             <div class="clearfix"></div>
